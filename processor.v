@@ -2,7 +2,7 @@ module processor;
 reg [31:0] pc; //32-bit prograom counter
 reg clk; //clock
 reg [7:0] datmem[0:31],mem[0:31]; //32-size data and instruction memory (8 bit(1 byte) for each location)
-wire [31:0] 
+wire [31:0]
 dataa,	//Read data 1 output of Register File
 datab,	//Read data 2 output of Register File
 out2,		//Output of mux with ALUSrc control-mult2
@@ -15,7 +15,7 @@ adder2out,	//Output of adder which adds PC+4 and 2 shifted sign-extend result-ad
 sextad;	//Output of shift left 2 unit
 
 wire [5:0] inst31_26;	//31-26 bits of instruction
-wire [4:0] 
+wire [4:0]
 inst25_21,	//25-21 bits of instruction
 inst20_16,	//20-16 bits of instruction
 inst15_11,	//15-11 bits of instruction
@@ -43,7 +43,7 @@ integer i;
 always @(posedge clk)
 //write data to memory
 if (memwrite)
-begin 
+begin
 //sum stores address,datab stores the value to be written
 datmem[sum[4:0]+3]=datab[7:0];
 datmem[sum[4:0]+2]=datab[15:8];
@@ -113,7 +113,7 @@ alucont acont(aluop1,aluop0,instruc[3],instruc[2], instruc[1], instruc[0] ,gout)
 shift shift2(sextad,extad);
 
 //AND gate
-assign pcsrc=branch && zout; 
+assign pcsrc=branch && zout;
 
 //initialize datamemory,instruction memory and registers
 //read initial data from files given in hex
@@ -132,7 +132,7 @@ initial
 begin
 pc=0;
 #400 $finish;
-	
+
 end
 initial
 begin
@@ -140,10 +140,9 @@ clk=0;
 //40 time unit for each cycle
 forever #20  clk=~clk;
 end
-initial 
+initial
 begin
   $monitor($time,"PC %h",pc,"  SUM %h",sum,"   INST %h",instruc[31:0],
 "   REGISTER %h %h %h %h ",registerfile[4],registerfile[5], registerfile[6],registerfile[1] );
 end
 endmodule
-

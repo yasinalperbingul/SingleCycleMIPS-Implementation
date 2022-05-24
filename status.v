@@ -15,7 +15,7 @@ always @ (*)
 begin
 
 	case(status_check)
-		3'b000: 
+		3'b000:
 			begin
 			out_pc = pc
 			end
@@ -46,3 +46,4 @@ begin
 		default: out_pc = out;
 	endcase
 end
+endmodule
