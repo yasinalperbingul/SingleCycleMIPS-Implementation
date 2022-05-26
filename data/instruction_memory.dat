@@ -1,0 +1,60 @@
+00 // sub (1)
+41
+18
+22
+54 // bmn (2)
+80
+00
+04
+xx // dummy (3)
+xx
+xx
+xx
+00 // add (4)
+65
+18
+20
+00 // brz (5)
+c0
+00
+14
+00 // jmor (6)
+22
+00
+25
+xx // dummy (7)
+xx
+xx
+xx
+00 // add (8)
+63
+18
+20
+60 // bz (9)
+00
+00
+0A
+xx // dummy (10)
+xx
+xx
+xx
+4c // jalm (11)
+ff
+00
+04
+xx // dummy (12)
+xx
+xx
+xx
+58 // jspal (13)
+00
+00
+00
+xx // dummy (14)
+xx
+xx
+xx
+10 // beq (15)
+67
+00
+00
