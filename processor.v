@@ -174,7 +174,7 @@ pc=0;
 end
 initial
 begin
-clk=0;
+clk=1;
 //40 time unit for each cycle
 forever #20  clk=~clk;
 end
