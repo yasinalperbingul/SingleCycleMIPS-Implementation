@@ -47,7 +47,7 @@ begin
 			out_pc = mem_out;
             enable = 1;
 			end
-		default: out_pc = out;
+		default: out_pc = pc;
 	endcase
 end
 endmodule

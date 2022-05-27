@@ -26,8 +26,8 @@ assign aluop1=rformat;
 assign aluop2=beq;
 
 //Tamamlandı-Kontrol edilmeli
-assign status0 = beq|bmn|bz|jalm
-assign status1 = beq|brz|bz|jspal
-assign status2 = beq|jmor|jalm|jspal
+assign status0 = beq|bmn|bz|jalm;
+assign status1 = beq|brz|bz|jspal;
+assign status2 = beq|jmor|jalm|jspal;
 
 endmodule
