@@ -3,8 +3,8 @@ reg [31:0] pc; //32-bit prograom counter
 reg clk; //clock
 reg [7:0] datmem[0:31],mem[0:31]; //32-size data and instruction memory (8 bit(1 byte) for each location)
 wire [31:0]
-dataa,	//Read data 1 output of Register File
-datab,	//Read data 2 output of Register File
+dataa,		//Read data 1 output of Register File
+datab,		//Read data 2 output of Register File
 out2,		//Output of mux with ALUSrc control-mult2
 out3,		//Output of mux with MemToReg control-mult3
 out4,		//Output of mux with (Branch&ALUZero) control-mult4
@@ -38,8 +38,23 @@ reg [31:0] registerfile[0:31];
 
 integer i;
 
-// datamemory connections
+//****************************************************
+wire[31:0]
+out5,		// Input of Reg[Write data]
+out6,
+out_pc;		
 
+wire n, z, v, enable, select;
+
+wire [25:0] inst25_0;
+wire [5:0] inst5_0;
+
+//Status signals
+wire status0,status1,status2,status_select;
+
+//*****************************************************
+
+// datamemory connections
 always @(posedge clk)
 //write data to memory
 if (memwrite)
@@ -59,14 +74,19 @@ end
  assign inst20_16=instruc[20:16];
  assign inst15_11=instruc[15:11];
  assign inst15_0=instruc[15:0];
+ assign inst25_0=instruc[25:0];
+ assign inst5_0= instruc[5:0];
 
 
 // registers
-
 assign dataa=registerfile[inst25_21];//Read register 1
 assign datab=registerfile[inst20_16];//Read register 2
+
+
+
+
 always @(posedge clk)
- registerfile[out1]= regwrite ? out3:registerfile[out1];//Write data to register
+ registerfile[out1]= regwrite ? out5:registerfile[out1];//Write data to register
 
 //read data from memory, sum stores address
 assign dpack={datmem[sum[5:0]],datmem[sum[5:0]+1],datmem[sum[5:0]+2],datmem[sum[5:0]+3]};
@@ -84,9 +104,16 @@ mult2_to_1_32 mult3(out3, sum,dpack,memtoreg);
 //mux with (Branch&ALUZero) control
 mult2_to_1_32 mult4(out4, adder1out,adder2out,pcsrc);
 
+//mux5
+mult2_to_1_32 mult5(out5, out3, adder1out, status2); //!!
+
+//mux6
+mult2_to_1_32 mult6(out6, out4, out_pc, select); //!!
+
+
 // load pc
 always @(negedge clk)
-pc=out4;
+pc=out6;
 
 // alu, adder and control logic connections
 
@@ -100,8 +127,8 @@ adder add1(pc,32'h4,adder1out);
 adder add2(adder1out,sextad,adder2out);
 
 //Control unit
-control cont(instruc[31:26],regdest,alusrc,memtoreg,regwrite,memread,memwrite,branch,
-aluop1,aluop0);
+control cont(instruc[31:26],inst5_0,regdest,alusrc,memtoreg,regwrite,memread,memwrite,branch,
+aluop1,aluop0,status0,status1,status2);
 
 //Sign extend unit
 signext sext(instruc[15:0],extad);
@@ -112,16 +139,27 @@ alucont acont(aluop1,aluop0,instruc[5],instruc[4],instruc[3],instruc[2], instruc
 //Shift-left 2 unit
 shift shift2(sextad,extad);
 
+//status module
+status stat(n,z,v,zout,sum);
+
+//j br controller
+j_br_control jbrcont(out_pc,enable,adder1out,dpack,inst25_0,status0,status1,status2,n,z,v);
+
 //AND gate
 assign pcsrc=branch && zout;
+
+//For select bit
+assign status_select = status0|status1|status2;
+assign select = enable && status_select;
+
 
 //initialize datamemory,instruction memory and registers
 //read initial data from files given in hex
 initial
 begin
-$readmemh("initDm.dat",datmem); //read Data Memory
-$readmemh("initIM.dat",mem);//read Instruction Memory
-$readmemh("initReg.dat",registerfile);//read Register File
+$readmemh("data/data_memory.dat",datmem); //read Data Memory
+$readmemh("data/instruction_memory.dat",mem);//read Instruction Memory
+$readmemh("data/registers.dat",registerfile);//read Register File
 
 	for(i=0; i<31; i=i+1)
 	$display("Instruction Memory[%0d]= %h  ",i,mem[i],"Data Memory[%0d]= %h   ",i,datmem[i],
