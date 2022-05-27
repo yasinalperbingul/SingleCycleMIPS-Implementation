@@ -17,14 +17,11 @@ assign jspal=~in[5]& in[4]&(~in[3])&in[2]&in[1]&in[0]; // 010011 opcode = 22*
 
 //Düzenlenecek
 assign regdest=rformat;
-assign alusrc=lw|sw|bmn;
-assign memtoreg=lw;
-assign regwrite=rformat|lw;
-assign memread=lw|bmn;
+assign alusrc=lw|sw|bmn|jalm;
+assign memtoreg=lw|bmn|jmor|jalm|jspal;
+assign regwrite=rformat|lw|jmor;
+assign memread=lw|bmn|jmor|jalm|jspal;
 assign memwrite=sw;
-//assign branch=beq; -> Bu artık branch control unitte
-
-//Düzenlenecek
 assign aluop1=rformat;
 assign aluop2=beq;
 

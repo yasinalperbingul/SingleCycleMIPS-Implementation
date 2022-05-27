@@ -107,7 +107,7 @@ aluop1,aluop0);
 signext sext(instruc[15:0],extad);
 
 //ALU control unit
-alucont acont(aluop1,aluop0,instruc[3],instruc[2], instruc[1], instruc[0] ,gout);
+alucont acont(aluop1,aluop0,instruc[5],instruc[4],instruc[3],instruc[2], instruc[1], instruc[0] ,gout);
 
 //Shift-left 2 unit
 shift shift2(sextad,extad);

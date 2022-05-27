@@ -42,7 +42,7 @@ begin
 			out_pc = mem_out;
             enable = 1;
 			end
-        3'b110: 			// jspal instruction is active
+        3'b110: 			// jspal instruction is active** instruction memory'de değeri düzeltilecek
 			begin
 			out_pc = mem_out;
             enable = 1;
