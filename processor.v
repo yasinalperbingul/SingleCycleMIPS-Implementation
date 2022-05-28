@@ -1,4 +1,5 @@
 module processor;
+reg [31:0] prev_sum;
 reg [31:0] pc; //32-bit prograom counter
 reg clk; //clock
 reg [7:0] datmem[0:31],mem[0:31]; //32-size data and instruction memory (8 bit(1 byte) for each location)
@@ -42,7 +43,7 @@ integer i;
 wire[31:0]
 out5,		// Input of Reg[Write data]
 out6,
-out_pc;		
+out_pc;
 
 wire n, z, v, enable, select;
 
@@ -89,7 +90,7 @@ always @(posedge clk)
  registerfile[out1]= regwrite ? out5:registerfile[out1];//Write data to register
 
 //read data from memory, sum stores address
-assign dpack={datmem[sum[5:0]],datmem[sum[5:0]+1],datmem[sum[5:0]+2],datmem[sum[5:0]+3]};
+assign dpack=datmem[sum[5:0]];
 
 //multiplexers
 //mux with RegDst control
@@ -113,6 +114,9 @@ mult2_to_1_32 mult6(out6, out4, out_pc, select); //!!
 
 // load pc
 always @(negedge clk)
+
+prev_sum = sum
+
 pc=out6;
 
 // alu, adder and control logic connections
@@ -140,7 +144,7 @@ alucont acont(aluop1,aluop0,instruc[5],instruc[4],instruc[3],instruc[2], instruc
 shift shift2(sextad,extad);
 
 //status module
-status stat(n,z,v,zout,sum);
+status stat(n,z,v,zout,prev_sum);
 
 //j br controller
 j_br_control jbrcont(out_pc,enable,adder1out,dpack,inst25_0,status0,status1,status2,n,z,v);
