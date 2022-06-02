@@ -114,9 +114,9 @@ mult2_to_1_32 mult6(out6, out4, out_pc, select); //!!
 
 // load pc
 always @(negedge clk)
+prev_sum = sum;
 
-prev_sum = sum
-
+always @(negedge clk)
 pc=out6;
 
 // alu, adder and control logic connections
@@ -147,7 +147,7 @@ shift shift2(sextad,extad);
 status stat(n,z,v,zout,prev_sum);
 
 //j br controller
-j_br_control jbrcont(out_pc,enable,adder1out,dpack,inst25_0,status0,status1,status2,n,z,v);
+j_br_control jbrcont(out_pc,enable,adder1out,dpack, dataa, inst25_0,status0,status1,status2,n,z,v);
 
 //AND gate
 assign pcsrc=branch && zout;

@@ -1,5 +1,5 @@
-module j_br_control(out_pc, enable, pc4, mem_out, j_diraddr, status0, status1, status2, n, z, v);
-input [31:0] mem_out, pc4;
+module j_br_control(out_pc, enable, pc4, mem_out, reg_s, j_diraddr, status0, status1, status2, n, z, v);
+input [31:0] mem_out, pc4, reg_s;
 input[25:0] j_diraddr;
 input status0, status1, status2, n, z, v;
 output [31:0] out_pc;
@@ -26,7 +26,7 @@ begin
 			end
 		3'b010: 			// brz instruction is active
 			begin
-			out_pc = z ? mem_out : pc4;
+			out_pc = z ? reg_s : pc4;
             enable = 1;
 			end
 		3'b011: 			// bz instruction is active
