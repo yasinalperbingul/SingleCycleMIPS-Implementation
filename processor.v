@@ -2,7 +2,7 @@ module processor;
 reg [31:0] prev_sum;
 reg [31:0] pc; //32-bit prograom counter
 reg clk; //clock
-reg [7:0] datmem[0:31],mem[0:31]; //32-size data and instruction memory (8 bit(1 byte) for each location)
+reg [7:0] datmem[0:31],mem[0:127]; //32-size data and instruction memory (8 bit(1 byte) for each location)
 wire [31:0]
 dataa,		//Read data 1 output of Register File
 datab,		//Read data 2 output of Register File
@@ -49,6 +49,7 @@ wire n, z, v, enable, select;
 
 wire [25:0] inst25_0;
 wire [5:0] inst5_0;
+wire [4:0] jspal_res1, jspal_res2;
 
 //Status signals
 wire status0,status1,status2,status_select;
@@ -69,7 +70,7 @@ end
 
 //instruction memory
 //4-byte instruction
- assign instruc={mem[pc[4:0]],mem[pc[4:0]+1],mem[pc[4:0]+2],mem[pc[4:0]+3]};
+ assign instruc={mem[pc[6:0]],mem[pc[6:0]+1],mem[pc[6:0]+2],mem[pc[6:0]+3]};
  assign inst31_26=instruc[31:26];
  assign inst25_21=instruc[25:21];
  assign inst20_16=instruc[20:16];
@@ -80,8 +81,8 @@ end
 
 
 // registers
-assign dataa=registerfile[inst25_21];//Read register 1
-assign datab=registerfile[inst20_16];//Read register 2
+assign dataa=registerfile[jspal_res1];//Read register 1
+assign datab=registerfile[jspal_res2];//Read register 2
 
 
 
@@ -106,10 +107,16 @@ mult2_to_1_32 mult3(out3, sum,dpack,memtoreg);
 mult2_to_1_32 mult4(out4, adder1out,adder2out,pcsrc);
 
 //mux5
-mult2_to_1_32 mult5(out5, out3, adder1out, status2); //!!
+mult2_to_1_32 mult5(out5, out3, adder1out, status2); 
 
 //mux6
-mult2_to_1_32 mult6(out6, out4, out_pc, select); //!!
+mult2_to_1_32 mult6(out6, out4, out_pc, select); 
+
+//mux7
+mult2_to_1_32 mult7(jspal_res1, inst25_21 , 29, jspal_signal); //!!
+
+//mux8
+mult2_to_1_32 mult8(jspal_res2, inst20_16 , 21, jspal_signal); //!!
 
 
 // load pc
@@ -156,6 +163,9 @@ assign pcsrc=branch && zout;
 assign status_select = status0|status1|status2;
 assign select = enable && status_select;
 
+//For jspal
+assign jspal_signal = (~status0) & status1 & status2;
+
 
 //initialize datamemory,instruction memory and registers
 //read initial data from files given in hex
@@ -165,7 +175,7 @@ $readmemh("data/data_memory.dat",datmem); //read Data Memory
 $readmemh("data/instruction_memory.dat",mem);//read Instruction Memory
 $readmemh("data/registers.dat",registerfile);//read Register File
 
-	for(i=0; i<31; i=i+1)
+	for(i=0; i<64; i=i+1)
 	$display("Instruction Memory[%0d]= %h  ",i,mem[i],"Data Memory[%0d]= %h   ",i,datmem[i],
 	"Register[%0d]= %h",i,registerfile[i]);
 end

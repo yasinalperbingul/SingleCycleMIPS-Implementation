@@ -13,7 +13,7 @@ assign brz=~in[5]& (~in[4])&(~in[3])&(~in[2])&(~in[1])&(~in[0])&(~funct[5])&(fun
 assign bz=~in[5]& in[4]&in[3]&(~in[2])&(~in[1])&(~in[0]); // 011000 opcode = 24
 assign jmor=~in[5]& (~in[4])&(~in[3])&(~in[2])&(~in[1])&(~in[0])&(funct[5])&(~funct[4])&(~funct[3])&(funct[2])&(~funct[1])&(funct[0]); // 100001 func code = 37
 assign jalm=~in[5]& in[4]&(~in[3])&(~in[2])&in[1]&in[0]; // 010011 opcode = 19
-assign jspal=~in[5]& in[4]&(~in[3])&in[2]&in[1]&in[0]; // 010011 opcode = 22*
+assign jspal=(~in[5])& in[4]&(~in[3])&in[2]&in[1]&(~in[0]); // 010110 opcode = 22
 
 //Düzenlenecek
 assign regdest=rformat;
