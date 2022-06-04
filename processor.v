@@ -45,11 +45,11 @@ out5,		// Input of Reg[Write data]
 out6,
 out_pc;
 
-wire n, z, v, enable, select;
+wire n, z, v, enable, select, jspal_signal, jmor_signal, jalm_signal;
 
 wire [25:0] inst25_0;
 wire [5:0] inst5_0;
-wire [4:0] jspal_res1, jspal_res2;
+wire [4:0] jspal_res1, jspal_res2, jmor_res, jalm_res;
 
 //Status signals
 wire status0,status1,status2,status_select;
@@ -95,7 +95,7 @@ assign dpack=datmem[sum[5:0]];
 
 //multiplexers
 //mux with RegDst control
-mult2_to_1_5  mult1(out1, instruc[20:16],instruc[15:11],regdest);
+mult2_to_1_5  mult1(out1, jalm_res,jmor_res,regdest);
 
 //mux with ALUSrc control
 mult2_to_1_32 mult2(out2, datab,extad,alusrc);
@@ -117,6 +117,12 @@ mult2_to_1_32 mult7(jspal_res1, inst25_21 , 29, jspal_signal); //!!
 
 //mux8
 mult2_to_1_32 mult8(jspal_res2, inst20_16 , 21, jspal_signal); //!!
+
+//mux9
+mult2_to_1_32 mult9(jalm_res, inst20_16 , 31, jalm_signal); //!!
+
+//mux10
+mult2_to_1_32 mult10(jmor_res, inst15_11 , 31, jmor_signal); //!!
 
 
 // load pc
@@ -165,6 +171,8 @@ assign select = enable && status_select;
 
 //For jspal
 assign jspal_signal = (~status0) & status1 & status2;
+assign jalm_signal = status0 & (~status1) & status2;
+assign jmor_signal = status0 & status1 & (~status2);
 
 
 //initialize datamemory,instruction memory and registers
