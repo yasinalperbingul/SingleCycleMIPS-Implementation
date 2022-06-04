@@ -31,7 +31,7 @@ begin
 			end
 		3'b011: 			// bz instruction is active
 			begin
-			out_pc= z ? j_diraddr : pc4;
+			out_pc= z ? pc4 : j_diraddr;
             enable = 1;
 			end
 		3'b100: 			// jmor instruction is active

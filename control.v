@@ -19,9 +19,9 @@ assign jspal=(~in[5])& in[4]&(~in[3])&in[2]&in[1]&(~in[0]); // 010110 opcode = 2
 assign regdest=rformat;
 assign alusrc=lw|sw|bmn|jalm;
 assign memtoreg=lw|bmn|jmor|jalm|jspal;
-assign regwrite=rformat|lw|jmor;
+assign regwrite=rformat|lw|jmor|jalm;
 assign memread=lw|bmn|jmor|jalm|jspal;
-assign memwrite=sw;
+assign memwrite=sw|jspal;
 assign aluop1=rformat;
 assign aluop2=beq;
 

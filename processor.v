@@ -43,7 +43,8 @@ integer i;
 wire[31:0]
 out5,		// Input of Reg[Write data]
 out6,
-out_pc;
+out_pc,
+jspal_res3;
 
 wire n, z, v, enable, select, jspal_signal, jmor_signal, jalm_signal;
 
@@ -62,10 +63,10 @@ always @(posedge clk)
 if (memwrite)
 begin
 //sum stores address,datab stores the value to be written
-datmem[sum[4:0]+3]=datab[7:0];
-datmem[sum[4:0]+2]=datab[15:8];
-datmem[sum[4:0]+1]=datab[23:16];
-datmem[sum[4:0]]=datab[31:24];
+datmem[sum[4:0]+3]=jspal_res3[7:0];
+datmem[sum[4:0]+2]=jspal_res3[15:8];
+datmem[sum[4:0]+1]=jspal_res3[23:16];
+datmem[sum[4:0]]=jspal_res3[31:24];
 end
 
 //instruction memory
@@ -123,6 +124,9 @@ mult2_to_1_32 mult9(jalm_res, inst20_16 , 31, jalm_signal); //!!
 
 //mux10
 mult2_to_1_32 mult10(jmor_res, inst15_11 , 31, jmor_signal); //!!
+
+//mux11
+mult2_to_1_32 mult11(jspal_res3, datab , adder1out, jspal_signal); //!!
 
 
 // load pc
@@ -218,7 +222,9 @@ begin
   "Register[%0d]= %h",24,registerfile[24],"  Register[%0d]= %h\n",25,registerfile[25],
   "Register[%0d]= %h",26,registerfile[26],"  Register[%0d]= %h\n",27,registerfile[27],
   "Register[%0d]= %h",28,registerfile[28],"  Register[%0d]= %h\n",29,registerfile[29],
-  "Register[%0d]= %h",30,registerfile[30],"  Register[%0d]= %h\n",31,registerfile[31]);
+  "Register[%0d]= %h",30,registerfile[30],"  Register[%0d]= %h\n",31,registerfile[31],
+  "Data Memory[%0d]= %h",0,datmem[0]);
+
 end
 
 endmodule
