@@ -107,10 +107,10 @@ mult2_to_1_32 mult3(out3, sum,dpack,memtoreg);
 mult2_to_1_32 mult4(out4, adder1out,adder2out,pcsrc);
 
 //mux5
-mult2_to_1_32 mult5(out5, out3, adder1out, status2); 
+mult2_to_1_32 mult5(out5, out3, adder1out, status2);
 
 //mux6
-mult2_to_1_32 mult6(out6, out4, out_pc, select); 
+mult2_to_1_32 mult6(out6, out4, out_pc, select);
 
 //mux7
 mult2_to_1_32 mult7(jspal_res1, inst25_21 , 29, jspal_signal); //!!
@@ -202,7 +202,23 @@ forever #20  clk=~clk;
 end
 initial
 begin
-  $monitor($time,"PC %h",pc,"  SUM %h",sum,"   INST %h",instruc[31:0],
-"   REGISTER %h %h %h %h ",registerfile[4],registerfile[5], registerfile[6],registerfile[1] );
+  $monitor($time, "PC %h", pc, "  SUM %h", sum, "   INST %h\n", instruc[31:0],
+  "Register[%0d]= %h",0,registerfile[0],"  Register[%0d]= %h\n",1,registerfile[1],
+  "Register[%0d]= %h",2,registerfile[2],"  Register[%0d]= %h\n",3,registerfile[3],
+  "Register[%0d]= %h",4,registerfile[4],"  Register[%0d]= %h\n",5,registerfile[5],
+  "Register[%0d]= %h",6,registerfile[6],"  Register[%0d]= %h\n",7,registerfile[7],
+  "Register[%0d]= %h",8,registerfile[8],"  Register[%0d]= %h\n",9,registerfile[9],
+  "Register[%0d]= %h",10,registerfile[10],"  Register[%0d]= %h\n",11,registerfile[11],
+  "Register[%0d]= %h",12,registerfile[12],"  Register[%0d]= %h\n",13,registerfile[13],
+  "Register[%0d]= %h",14,registerfile[14],"  Register[%0d]= %h\n",15,registerfile[15],
+  "Register[%0d]= %h",16,registerfile[16],"  Register[%0d]= %h\n",17,registerfile[17],
+  "Register[%0d]= %h",18,registerfile[18],"  Register[%0d]= %h\n",19,registerfile[19],
+  "Register[%0d]= %h",20,registerfile[20],"  Register[%0d]= %h\n",21,registerfile[21],
+  "Register[%0d]= %h",22,registerfile[22],"  Register[%0d]= %h\n",23,registerfile[23],
+  "Register[%0d]= %h",24,registerfile[24],"  Register[%0d]= %h\n",25,registerfile[25],
+  "Register[%0d]= %h",26,registerfile[26],"  Register[%0d]= %h\n",27,registerfile[27],
+  "Register[%0d]= %h",28,registerfile[28],"  Register[%0d]= %h\n",29,registerfile[29],
+  "Register[%0d]= %h",30,registerfile[30],"  Register[%0d]= %h\n",31,registerfile[31]);
 end
+
 endmodule
